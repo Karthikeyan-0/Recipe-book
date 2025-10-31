@@ -1,14 +1,41 @@
 // frontend/src/components/Navbar.tsx
-import { Link } from 'react-router-dom';
+interface NavbarProps {
+  title?: string;
+  onBack?: () => void;
+  showBackButton?: boolean;
+}
 
-const Navbar = () => {
+const Navbar = ({ title = "RecipeHub", onBack, showBackButton = false }: NavbarProps) => {
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex flex-col items-center">
-        <span className="text-white text-2xl font-bold mb-2">Recipe Book</span>
-        <div className="flex justify-center gap-8 mt-2">
-          <Link to="/" className="text-white px-6 py-2 rounded hover:bg-gray-700 transition">Recipes</Link>
-          <Link to="/add" className="text-white px-6 py-2 rounded hover:bg-gray-700 transition">Add Recipe</Link>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg backdrop-blur-md bg-opacity-95">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo and Brand */}
+          <div className="flex items-center gap-3">
+            {showBackButton && onBack && (
+              <button
+                onClick={onBack}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 group"
+              >
+                <span className="text-2xl group-hover:-translate-x-1 transition-transform duration-200">←</span>
+              </button>
+            )}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center transform hover:scale-110 transition-transform duration-300">
+                <span className="text-white font-bold text-lg">🍳</span>
+              </div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                {title}
+              </h1>
+            </div>
+          </div>
+
+          {/* Navigation Links */}
+          {!showBackButton && (
+            <div className="hidden md:flex items-center gap-8">
+              {/* Navigation removed */}
+            </div>
+          )}
         </div>
       </div>
     </nav>
