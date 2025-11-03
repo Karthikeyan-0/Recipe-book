@@ -2,10 +2,11 @@
 interface NavbarProps {
   title?: string;
   onBack?: () => void;
+  onLogout?: () => void;
   showBackButton?: boolean;
 }
 
-const Navbar = ({ title = "RecipeHub", onBack, showBackButton = false }: NavbarProps) => {
+const Navbar = ({ title = "RecipeHub", onBack, onLogout, showBackButton = false }: NavbarProps) => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg backdrop-blur-md bg-opacity-95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,11 +32,16 @@ const Navbar = ({ title = "RecipeHub", onBack, showBackButton = false }: NavbarP
           </div>
 
           {/* Navigation Links */}
-          {!showBackButton && (
-            <div className="hidden md:flex items-center gap-8">
-              {/* Navigation removed */}
-            </div>
-          )}
+          <div className="flex items-center gap-4">
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-orange-600 transition-colors duration-200 rounded-lg hover:bg-orange-50"
+              >
+                🚪 Logout
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </nav>
