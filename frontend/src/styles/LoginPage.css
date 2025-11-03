@@ -209,6 +209,44 @@
   animation: fade-in 0.6s ease-out;
 }
 
+/* Role Selector Styles */
+.role-selector {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.role-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  color: #666;
+}
+
+.role-btn:hover:not(:disabled) {
+  border-color: #ff6b35;
+  background: #fff5f0;
+  color: #ff6b35;
+}
+
+.role-btn.active {
+  background: linear-gradient(135deg, #ff6b35, #ff5500);
+  color: white;
+  border-color: #ff5500;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+.role-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
   .login-card {

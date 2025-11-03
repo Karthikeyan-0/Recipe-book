@@ -7,6 +7,7 @@ import AddRecipePage from './pages/AddRecipePage';
 import Navbar from './components/Navbar';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 export interface Recipe {
   _id?: string;
@@ -19,6 +20,7 @@ export interface Recipe {
 interface User {
   email: string;
   name?: string;
+  role?: 'user' | 'admin';
   isLoggedIn: boolean;
 }
 
@@ -86,9 +88,10 @@ const AppContent = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<LandingPage recipes={recipes} setRecipes={setRecipes} />} />
-      <Route path="/recipes" element={<HomePage recipes={recipes} onBack={() => window.location.href = '/'} onRefresh={fetchRecipes} />} />
+      <Route path="/" element={<LandingPage recipes={recipes} setRecipes={setRecipes} user={user} onRefresh={() => fetchRecipes()} />} />
+      <Route path="/recipes" element={<HomePage recipes={recipes} onBack={() => window.location.href = '/'} onRefresh={() => fetchRecipes()} />} />
       <Route path="/add" element={<AddRecipePage onBack={() => window.location.href = '/'} recipes={recipes} setRecipes={setRecipes as any} />} />
+      <Route path="/admin" element={<AdminDashboard recipes={recipes} onBack={() => window.location.href = '/'} onRefresh={() => fetchRecipes()} />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
@@ -105,10 +108,12 @@ function App() {
 interface LandingPageProps {
   recipes: Recipe[];
   setRecipes: (recipes: Recipe[]) => void;
+  user: User | null;
+  onRefresh: () => void;
 }
 
-function LandingPage({ recipes, setRecipes }: LandingPageProps) {
-  const [page, setPage] = useState<'landing' | 'recipes' | 'add'>('landing');
+function LandingPage({ recipes, setRecipes, user, onRefresh }: LandingPageProps) {
+  const [page, setPage] = useState<'landing' | 'recipes' | 'add' | 'admin'>('landing');
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -137,14 +142,22 @@ function LandingPage({ recipes, setRecipes }: LandingPageProps) {
                     onClick={() => setPage('recipes')}
                     className="px-8 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
                   >
-                     Explore Recipes
+                    🍽️ Explore Recipes
                   </button>
                   <button
                     onClick={() => setPage('add')}
                     className="px-8 py-3 border-2 border-orange-500 text-orange-600 rounded-lg font-bold hover:bg-orange-50 transition-all"
                   >
-                     Share Your Recipe
+                    ✏️ Share Your Recipe
                   </button>
+                  {user?.role === 'admin' && (
+                    <button
+                      onClick={() => setPage('admin')}
+                      className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                    >
+                      🔐 Admin Panel
+                    </button>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-6 pt-8">
@@ -203,6 +216,12 @@ function LandingPage({ recipes, setRecipes }: LandingPageProps) {
   if (page === 'add') {
     return (
       <AddRecipePage onBack={() => setPage('landing')} recipes={recipes} setRecipes={setRecipes as any} />
+    );
+  }
+
+  if (page === 'admin') {
+    return (
+      <AdminDashboard recipes={recipes} onBack={() => setPage('landing')} onRefresh={onRefresh} />
     );
   }
 

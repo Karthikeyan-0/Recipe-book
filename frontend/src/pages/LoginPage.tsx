@@ -5,6 +5,7 @@ import '../styles/LoginPage.css';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'user' | 'admin'>('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -29,8 +30,8 @@ export default function LoginPage() {
         return;
       }
 
-      // Store user info in localStorage
-      localStorage.setItem('user', JSON.stringify({ email, isLoggedIn: true }));
+      // Store user info in localStorage with role
+      localStorage.setItem('user', JSON.stringify({ email, role, isLoggedIn: true }));
       
       // Navigate to home and reload to ensure Auth context updates
       setLoading(false);
@@ -56,6 +57,28 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleLogin} className="login-form">
+          <div className="form-group">
+            <label className="form-label">Login As</label>
+            <div className="role-selector">
+              <button
+                type="button"
+                className={`role-btn ${role === 'user' ? 'active' : ''}`}
+                onClick={() => setRole('user')}
+                disabled={loading}
+              >
+                👤 User
+              </button>
+              <button
+                type="button"
+                className={`role-btn ${role === 'admin' ? 'active' : ''}`}
+                onClick={() => setRole('admin')}
+                disabled={loading}
+              >
+                🔑 Admin
+              </button>
+            </div>
+          </div>
+
           <div className="form-group">
             <label htmlFor="email" className="form-label">Email</label>
             <input
@@ -107,8 +130,12 @@ export default function LoginPage() {
 
         <div className="demo-login">
           <p className="demo-text">Demo Credentials:</p>
-          <p className="demo-info">Email: <code>demo@example.com</code></p>
+          <p className="demo-info"><strong>User Account:</strong></p>
+          <p className="demo-info">Email: <code>user@example.com</code></p>
           <p className="demo-info">Password: <code>password123</code></p>
+          <p className="demo-info" style={{ marginTop: '10px' }}><strong>Admin Account:</strong></p>
+          <p className="demo-info">Email: <code>admin@example.com</code></p>
+          <p className="demo-info">Password: <code>admin123</code></p>
         </div>
       </div>
     </div>
